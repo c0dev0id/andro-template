@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "androsnd"
+rootProject.name = "androtemplate"
 include(":app")
