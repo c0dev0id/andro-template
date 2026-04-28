@@ -58,12 +58,13 @@ class MainActivity : ComponentActivity() {
             val extras = intent.extras ?: return
             val deviceName = extras.getString("deviceName") ?: "<unknown>"
             val ts = System.currentTimeMillis()
+            val bcSource = intent.action ?: ACTION_KEYPRESS
             when {
                 extras.containsKey("key_press") -> {
                     val keyCode = extras.getInt("key_press")
                     broadcastDownTimes[deviceName to keyCode] = ts
                     append(KeyLogEntry(
-                        id = nextId++, wallTimeMs = ts, source = "bc",
+                        id = nextId++, wallTimeMs = ts, source = bcSource,
                         action = "DOWN", keyCode = keyCode,
                         keySymbol = KeyEvent.keyCodeToString(keyCode),
                         deviceName = deviceName,
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
                     val keyCode = extras.getInt("key_release")
                     val duration = broadcastDownTimes.remove(deviceName to keyCode)?.let { ts - it }
                     append(KeyLogEntry(
-                        id = nextId++, wallTimeMs = ts, source = "bc",
+                        id = nextId++, wallTimeMs = ts, source = bcSource,
                         action = "UP", keyCode = keyCode,
                         keySymbol = KeyEvent.keyCodeToString(keyCode),
                         deviceName = deviceName,
@@ -86,7 +87,7 @@ class MainActivity : ComponentActivity() {
                 else -> {
                     val raw = extras.keySet().joinToString(" ") { "$it=${extras.get(it)}" }
                     append(KeyLogEntry(
-                        id = nextId++, wallTimeMs = ts, source = "bc",
+                        id = nextId++, wallTimeMs = ts, source = bcSource,
                         action = "?", keyCode = null, keySymbol = null,
                         deviceName = deviceName,
                         deviceClass = null, inputSource = null,
